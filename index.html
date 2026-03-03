@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokemon Trainer Card V1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Merriweather:wght@400;700;900&family=Nunito:wght@400;700;900&family=Oswald:wght@500;700&family=Patrick+Hand&family=VT323&display=swap&subset=vietnamese" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #ffcb05;
+            --secondary: #3b4cca;
+            --dark: #121212;
+            --darker: #0a0a0a;
+            --glass: rgba(255, 255, 255, 0.95);
+            --glass-panel: rgba(40, 40, 45, 0.85);
+            --heart: #e91e63;
+        }
+
+        * { box-sizing: border-box; }
+        
+        /* Tùy chỉnh thanh cuộn */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--darker); }
+        ::-webkit-scrollbar-thumb { background: #555; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: radial-gradient(circle at top, #2b2b36, var(--darker));
+            color: #fff;
+            margin: 0;
+            padding: 20px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-family: 'VT323', monospace;
+            font-size: 3rem;
+            margin-top: 0;
+            margin-bottom: 30px;
+            text-shadow: 4px 4px var(--secondary), 0 0 20px rgba(255, 203, 5, 0.4);
+            text-align: center;
+            letter-spacing: 2px;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            width: 100%;
+            max-width: 1400px;
+            flex: 1;
+        }
+
+        /* --- CONTROLS --- */
+        .controls {
+            background: var(--glass-panel);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 25px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            height: fit-content;
+        }
+
+        .section-title {
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            margin-top: 20px;
+            letter-spacing: 1px;
+        }
+        .section-title:first-child { margin-top: 0; }
+
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 6px; font-weight: 700; color: #ccc; font-size: 0.85rem; }
+        
+        input, select, optgroup {
+            width: 100%; padding: 10px 12px; border-radius: 8px; 
+            border: 2px solid transparent;
+            background: #fff; color: #222; font-size: 0.95rem; outline: none;
+            font-family: 'Nunito', sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+        input:focus, select:focus {
+            border: 2px solid var(--secondary);
+            box-shadow: 0 0 8px rgba(59, 76, 202, 0.5);
+        }
+        optgroup { font-weight: bold; color: var(--secondary); background: #f0f0f0; }
+        option { font-weight: normal; color: #333; }
+        
+        .bg-options {
+            display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px;
+            margin-top: 5px;
+        }
+        .bg-btn {
+            width: 100%; aspect-ratio: 1; border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.2); cursor: pointer;
+            transition: all 0.2s ease; position: relative;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        .bg-btn:hover { transform: scale(1.15) translateY(-2px); border-color: white; z-index: 10; box-shadow: 0 5px 10px rgba(0,0,0,0.5); }
+
+        /* --- UI CẬP NHẬT TRAINER --- */
+        .gender-btn-group { display: flex; gap: 10px; margin-bottom: 10px; }
+        .gender-btn {
+            flex: 1; padding: 10px; border: 2px solid rgba(255,255,255,0.2); border-radius: 8px;
+            background: rgba(0,0,0,0.4); color: white; cursor: pointer; font-weight: bold;
+            transition: all 0.3s; font-size: 1rem;
+        }
+        .gender-btn.active {
+            background: var(--primary); color: #222; border-color: var(--primary);
+            box-shadow: 0 4px 10px rgba(255, 203, 5, 0.3);
+        }
+        .trainer-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+            max-height: 180px; overflow-y: auto; padding: 10px;
+            background: rgba(0,0,0,0.2); border-radius: 10px; margin-bottom: 15px;
+        }
+        .trainer-item {
+            cursor: pointer; border-radius: 8px; border: 2px solid transparent;
+            background: rgba(255,255,255,0.1); transition: 0.2s;
+            aspect-ratio: 1; display: flex; justify-content: center; align-items: flex-end;
+        }
+        .trainer-item:hover, .trainer-item.selected {
+            border-color: var(--primary); transform: scale(1.05); background: rgba(255,255,255,0.3);
+        }
+        .trainer-item img {
+            max-width: 90%; max-height: 90%; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+        }
+
+        /* --- PREVIEW AREA --- */
+        .preview-area {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-width: 300px;
+            padding-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .card-scaler {
+            transform-origin: top center;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        #trainer-card {
+            width: 700px;
+            height: 480px;
+            background: linear-gradient(135deg, #e53935, #b71c1c);
+            border-radius: 20px;
+            padding: 25px;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.7), inset 0 0 20px rgba(255,255,255,0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            font-family: 'Nunito', sans-serif; 
+            transition: background 0.5s ease;
+        }
+
+        /* Classes Font */
+        .font-nunito * { font-family: 'Nunito', sans-serif !important; }
+        .font-patrick * { font-family: 'Patrick Hand', cursive !important; }
+        .font-dancing * { font-family: 'Dancing Script', cursive !important; }
+        .font-oswald * { font-family: 'Oswald', sans-serif !important; letter-spacing: 1px; }
+        .font-merri * { font-family: 'Merriweather', serif !important; }
+
+        .card-header {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            margin-bottom: 10px; z-index: 2;
+        }
+        .card-title {
+            font-size: 1.8rem; font-weight: 900; color: rgba(255,255,255,0.95);
+            text-transform: uppercase; text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+            letter-spacing: 1px;
+        }
+        .card-id {
+            background: rgba(0,0,0,0.6); padding: 5px 15px; border-radius: 20px;
+            font-family: 'VT323', monospace !important; 
+            font-size: 1.6rem; 
+            color: #ffcb05; 
+            border: 2px solid rgba(255,255,255,0.4);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        /* --- CARD BODY --- */
+        .card-main {
+            display: flex; gap: 20px; height: 230px; margin-bottom: 10px; z-index: 5;
+        }
+
+        .info-box {
+            flex: 1; background: var(--glass); padding: 20px 25px;
+            border-radius: 15px; box-shadow: 5px 5px 20px rgba(0,0,0,0.2);
+            color: #222; display: grid; grid-template-columns: 110px 1fr;
+            align-content: center; gap: 8px 10px;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .info-label {
+            font-weight: 900; color: #666; font-size: 0.8rem; text-transform: uppercase;
+            align-self: center; letter-spacing: 0.5px;
+        }
+        .info-val {
+            font-weight: 800; color: #111; font-size: 1.15rem; 
+            overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+            border-bottom: 2px dotted #bbb; align-self: center; width: 100%;
+        }
+
+        .avatar-box {
+            width: 230px; height: 230px;
+            background: rgba(255,255,255,0.15); border: 4px solid #fff;
+            border-radius: 15px; overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3); position: relative;
+            display: flex; align-items: flex-end; justify-content: center;
+        }
+        .avatar-box img {
+            max-width: 100%; max-height: 100%; width: auto; height: auto;
+            object-fit: contain; filter: drop-shadow(0 0 8px rgba(0,0,0,0.4));
+            transition: transform 0.3s ease;
+        }
+        .avatar-box:hover img { transform: scale(1.05); }
+
+        .pokemon-team {
+            margin-top: auto; display: flex; justify-content: space-between; z-index: 5; padding: 5px;
+        }
+        .poke-slot {
+            width: 90px; height: 90px;
+            background: rgba(0,0,0,0.3); border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.8);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; position: relative; transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5), 0 4px 8px rgba(0,0,0,0.3);
+        }
+        .poke-slot:hover { transform: translateY(-5px) scale(1.05); border-color: var(--primary); background: rgba(0,0,0,0.4); }
+        .poke-slot img {
+            width: 85%; height: 85%; object-fit: contain;
+            filter: drop-shadow(2px 4px 5px rgba(0,0,0,0.6));
+        }
+        .remove-poke {
+            position: absolute; top: -5px; right: -5px;
+            background: #ff4444; color: white; border-radius: 50%;
+            width: 24px; height: 24px; display: none;
+            align-items: center; justify-content: center;
+            font-size: 12px; border: 2px solid white; font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
+        .poke-slot:hover .remove-poke { display: flex; }
+        .remove-poke:hover { background: #cc0000; transform: scale(1.1); }
+
+        /* BUTTONS */
+        .btn-save {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32); color: white; border: none; padding: 15px;
+            font-size: 1.1rem; border-radius: 10px; cursor: pointer;
+            margin-top: 25px; font-weight: bold; width: 100%;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+        .btn-save:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(76, 175, 80, 0.5); }
+        .btn-save:disabled { background: #666; cursor: not-allowed; box-shadow: none; transform: none; }
+
+        .btn-donate {
+            background: linear-gradient(135deg, var(--heart), #ad1457); color: white; border: none; padding: 12px;
+            font-size: 1rem; border-radius: 10px; cursor: pointer;
+            margin-top: 15px; font-weight: bold; width: 100%;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            transition: all 0.3s ease; animation: pulse 2s infinite;
+        }
+        .btn-donate:hover { transform: translateY(-2px); background: linear-gradient(135deg, #d81b60, #880e4f); }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(233, 30, 99, 0.6); }
+            70% { box-shadow: 0 0 0 12px rgba(233, 30, 99, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(233, 30, 99, 0); }
+        }
+
+        /* MODAL */
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 100;
+            justify-content: center; align-items: center;
+            animation: fadeIn 0.3s;
+        }
+        @keyframes fadeIn { from {opacity: 0} to {opacity: 1} }
+
+        .modal-content {
+            background: #fff; color: #333; width: 95%; max-width: 800px; height: 85vh;
+            border-radius: 20px; padding: 25px; display: flex; flex-direction: column;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.5);
+        }
+        
+        .donate-content {
+            background: #fff; color: #333; width: 95%; max-width: 650px;
+            border-radius: 20px; padding: 30px; 
+            position: relative; box-shadow: 0 15px 50px rgba(0,0,0,0.5);
+        }
+        
+        .donate-body {
+            display: flex; gap: 25px; margin-top: 15px; align-items: center;
+        }
+        
+        .donate-info { flex: 1; text-align: left; }
+        .donate-line {
+            padding: 12px 10px; border-bottom: 1px dashed #ddd; font-size: 1.1rem;
+            color: #444; font-weight: bold;
+        }
+        .donate-line:last-child { border-bottom: none; color: #666; font-size: 1rem; font-weight: normal; margin-top: 10px;}
+        
+        .donate-qr {
+            width: 220px; height: 220px;
+            border: 2px solid #eee; border-radius: 15px; padding: 10px;
+            background: #fafafa; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        .donate-qr img { width: 100%; height: 100%; object-fit: contain; }
+
+        .close-donate {
+            position: absolute; top: 15px; right: 20px; font-size: 2rem; cursor: pointer; color: #aaa;
+            transition: color 0.2s; line-height: 1;
+        }
+        .close-donate:hover { color: #333; }
+
+        @media (max-width: 600px) {
+            .donate-body { flex-direction: column; }
+            .donate-info { width: 100%; text-align: center; }
+        }
+
+        /* --- POKEMON FILTER --- */
+        .filter-group { display: flex; gap: 10px; margin-bottom: 15px; }
+        .filter-group .search-input { margin-bottom: 0 !important; }
+
+        .poke-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            gap: 12px; overflow-y: auto; flex: 1; padding: 15px; background: #f5f6fa;
+            border-radius: 12px; border: 1px solid #e1e2e6;
+            scroll-behavior: smooth;
+        }
+        .poke-item {
+            cursor: pointer; text-align: center; padding: 10px; border-radius: 10px;
+            background: white; border: 2px solid transparent;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+        }
+        .poke-item:hover { 
+            border-color: var(--secondary); 
+            transform: translateY(-3px) scale(1.05); 
+            box-shadow: 0 5px 15px rgba(59, 76, 202, 0.2);
+        }
+        
+        .search-input {
+            border: 2px solid #ddd !important; 
+            font-size: 1.05rem !important;
+            padding: 12px 15px !important;
+            box-shadow: none !important;
+        }
+        .search-input:focus { border-color: var(--secondary) !important; }
+
+        footer {
+            margin-top: 40px; width: 100%;
+            display: flex; justify-content: center; align-items: center; gap: 15px;
+            padding: 20px; background: rgba(0,0,0,0.5); color: #888; border-top: 1px solid rgba(255,255,255,0.05);
+            text-align: center; font-size: 0.85rem;
+        }
+        footer img { height: 35px; width: auto; opacity: 0.7; }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2rem; margin-bottom: 20px; }
+            .container { flex-direction: column; align-items: center; gap: 20px; }
+            .controls { max-width: 100%; }
+            .preview-area { width: 100%; align-items: center; }
+            .filter-group { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1><i class="fas fa-gamepad"></i> Pokemon Trainer Card </h1>
+
+    <div class="container">
+        <div class="controls">
+            <div class="section-title">1. Thông tin Trainer</div>
+            <div class="form-group"><input type="text" id="inpName" placeholder="Tên Trainer" value="Ash Ketchum"></div>
+            
+            <div class="form-group" style="display:flex; gap:10px">
+                <input type="text" id="inpId" value="ID: 99999" style="width:75%">
+                <button onclick="randomId()" style="width:25%; cursor:pointer; background:var(--primary); color:#222; border:none; border-radius:8px; font-size:1.2rem; transition:0.2s; font-weight:bold"><i class="fas fa-dice"></i></button>
+            </div>
+
+            <div class="form-group" style="display:flex; align-items:center; gap:10px; background:rgba(0,0,0,0.3); padding:8px 12px; border-radius:8px;">
+                <label style="margin:0; color:white; flex:1">Màu chữ ID:</label>
+                <input type="color" id="inpIdColor" value="#ffcb05" oninput="changeIdColor(this.value)" style="width:50px; height:35px; border:none; padding:0; background:transparent; cursor:pointer">
+            </div>
+
+            <div class="form-group">
+                <label>Ngày sinh (Date of Birth)</label>
+                <input type="date" id="inpDob">
+            </div>
+
+            <div class="form-group">
+                <label>Ngày khởi hành (Start Date)</label>
+                <input type="date" id="inpStart">
+            </div>
+
+            <div class="form-group">
+                <label>Số tiền (Money)</label>
+                <input type="text" id="inpMoney" value="$ 999,999" oninput="updateMoney(this.value)">
+            </div>
+
+            <div class="form-group">
+                <label>Class Level</label>
+                <select id="inpClass" onchange="updateClass(this.value)">
+                    <option value="NEWBIE">NEWBIE</option>
+                    <option value="TRAINER">TRAINER</option>
+                    <option value="GYM LEADER">GYM LEADER</option>
+                    <option value="ELITE FOUR">ELITE FOUR</option>
+                    <option value="CHAMPION" selected>CHAMPION</option>
+                    <option value="LEGEND">LEGEND</option>
+                </select>
+            </div>
+            
+            <div class="section-title">2. Chọn Trainer</div>
+            <div class="gender-btn-group">
+                <button id="btnMale" class="gender-btn active" onclick="setGender('male')">♂️ Nam</button>
+                <button id="btnFemale" class="gender-btn" onclick="setGender('female')">♀️ Nữ</button>
+            </div>
+            <div class="trainer-grid" id="trainerGrid">
+                </div>
+
+            <div class="section-title">3. Giao diện & Font</div>
+            <div class="form-group">
+                <label>Font chữ Card</label>
+                <select id="fontSelect" onchange="changeFont()">
+                    <option value="font-nunito">Nunito </option>
+                    <option value="font-patrick">Patrick Hand </option>
+                    <option value="font-dancing">Dancing Script </option>
+                    <option value="font-merri">Merriweather </option>
+                    <option value="font-oswald">Oswald </option>
+                </select>
+            </div>
+            
+            <label>Màu nền Card</label>
+            <div class="bg-options">
+                <div class="bg-btn" style="background: linear-gradient(135deg, #e53935, #b71c1c)" onclick="setBg('fire')" title="Fire"></div>
+                <div class="bg-btn" style="background: linear-gradient(135deg, #1e88e5, #0d47a1)" onclick="setBg('water')" title="Water"></div>
+                <div class="bg-btn" style="background: linear-gradient(135deg, #43a047, #1b5e20)" onclick="setBg('grass')" title="Grass"></div>
+                <div class="bg-btn" style="background: linear-gradient(135deg, #ffd700, #f57f17)" onclick="setBg('electric')" title="Electric"></div>
+                <div class="bg-btn" style="background: linear-gradient(135deg, #29b6f6, #01579b)" onclick="setBg('ice')" title="Ice"></div>
+                <div class="bg-btn" style="background: linear-gradient(135deg, #d32f2f, #8e0000)" onclick="setBg('fighting')" title="Fighting"></div>
+                <div class="bg-btn" style="background: linear-gradient(135deg, #ab47bc, #6a1b9a)" onclick="setBg('poison')" title="Poison"></div>
+                <div class="bg-btn" style="background: linear-gradient(135deg, #8d6e63, #3e2723)" onclick="setBg('ground')" title="Ground"></div>
+                <div class="bg-btn" style="background: linear-gradient(135deg, #90caf9, #1565c0)" onclick="setBg('flying')" title="Flying"></div>
+                <div class="bg-btn" style="background: linear-gradient(135deg, #f06292, #880e4f)" onclick="setBg('psychic')" title="Psychic"></div>
+                <div class="bg-btn" style="background: linear-gradient(135deg, #c5e1a5, #33691e)" onclick="setBg('bug')" title="Bug"></div>
+                <div class="bg-btn" style="background: linear-gradient(135deg, #607d8b, #263238)" onclick="setBg('steel')" title="Steel"></div>
+            </div>
+
+            <button class="btn-save" onclick="downloadCard()"><i class="fas fa-download"></i> TẢI CARD VỀ MÁY</button>
+            <button class="btn-donate" onclick="openDonate()"><i class="fas fa-heart"></i> Ủng Hộ Tác Giả</button>
+        </div>
+
+        <div class="preview-area">
+            <div class="card-scaler">
+                <div id="trainer-card" class="font-nunito">
+                    <div class="card-header">
+                        <div class="card-title">TRAINER CARD</div>
+                        <div class="card-id" id="valId">ID: 99999</div>
+                    </div>
+
+                    <div class="card-main">
+                        <div class="info-box">
+                            <span class="info-label">NAME</span><span class="info-val" id="valName">Ash </span>
+                            <span class="info-label">BIRTHDAY</span><span class="info-val" id="valDob">--/--/----</span>
+                            <span class="info-label">START</span><span class="info-val" id="valStart">--/--/----</span>
+                            <span class="info-label">MONEY</span><span class="info-val" id="valMoney">$ 999,999</span>
+                            <span class="info-label">CLASS LEVEL</span><span class="info-val" id="valClass">CHAMPION</span>
+                        </div>
+                        <div class="avatar-box">
+                            <img id="trainerImg" src="" alt="Trainer">
+                        </div>
+                    </div>
+
+                    <div class="pokemon-team">
+                        <div class="poke-slot" onclick="openModal(0)" id="slot-0"><i class="fas fa-plus" style="opacity:0.6; color:#fff; font-size: 1.5rem;"></i></div>
+                        <div class="poke-slot" onclick="openModal(1)" id="slot-1"><i class="fas fa-plus" style="opacity:0.6; color:#fff; font-size: 1.5rem;"></i></div>
+                        <div class="poke-slot" onclick="openModal(2)" id="slot-2"><i class="fas fa-plus" style="opacity:0.6; color:#fff; font-size: 1.5rem;"></i></div>
+                        <div class="poke-slot" onclick="openModal(3)" id="slot-3"><i class="fas fa-plus" style="opacity:0.6; color:#fff; font-size: 1.5rem;"></i></div>
+                        <div class="poke-slot" onclick="openModal(4)" id="slot-4"><i class="fas fa-plus" style="opacity:0.6; color:#fff; font-size: 1.5rem;"></i></div>
+                        <div class="poke-slot" onclick="openModal(5)" id="slot-5"><i class="fas fa-plus" style="opacity:0.6; color:#fff; font-size: 1.5rem;"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <img src="logo.png" alt="Logo" onerror="this.style.display='none'">
+        <span>@Dev PH <br> This is a non-commercial fan-made project.<br>Pokémon and all related names are trademarks of Nintendo, Game Freak, and The Pokémon Company.<br>I do not own any Pokémon-related copyrights.</span>
+    </footer>
+
+    <div id="pokeModal" class="modal">
+        <div class="modal-content">
+            <div style="display:flex; justify-content:space-between; margin-bottom:15px; align-items: center;">
+                <h2 style="margin:0; color:var(--secondary)">Chọn Pokemon</h2>
+                <button onclick="closeModal()" style="padding:8px 15px; cursor:pointer; background:#ff4444; color:white; border:none; border-radius:8px; font-weight:bold; font-size:1.1rem">X</button>
+            </div>
+            
+            <div class="filter-group">
+                <input type="text" id="searchPoke" class="search-input" style="flex:2" placeholder="Tìm tên (VD: Pikachu, Charizard...)" onkeyup="filterPoke()">
+                <select id="typePoke" class="search-input" style="flex:1" onchange="filterPoke()">
+                    <option value="all">Tất cả hệ</option>
+                    <option value="normal">Normal</option>
+                    <option value="fire">Fire</option>
+                    <option value="water">Water</option>
+                    <option value="grass">Grass</option>
+                    <option value="electric">Electric</option>
+                    <option value="ice">Ice</option>
+                    <option value="fighting">Fighting</option>
+                    <option value="poison">Poison</option>
+                    <option value="ground">Ground</option>
+                    <option value="flying">Flying</option>
+                    <option value="psychic">Psychic</option>
+                    <option value="bug">Bug</option>
+                    <option value="rock">Rock</option>
+                    <option value="ghost">Ghost</option>
+                    <option value="dragon">Dragon</option>
+                    <option value="dark">Dark</option>
+                    <option value="steel">Steel</option>
+                    <option value="fairy">Fairy</option>
+                </select>
+            </div>
+
+            <div class="poke-grid" id="pokeList">
+                <div style="grid-column: 1/-1; text-align:center; padding: 20px; color: #666;">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 10px; color: var(--secondary)"></i><br>
+                    Đang tải dữ liệu Pokemon...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="donateModal" class="modal" onclick="if(event.target == this) closeDonate()">
+        <div class="donate-content">
+            <span class="close-donate" onclick="closeDonate()">&times;</span>
+            <h2 style="color:var(--heart); margin-top:0; border-bottom:2px solid #eee; padding-bottom:15px;"><i class="fas fa-heart"></i> Ủng Hộ Tác Giả</h2>
+            
+            <div class="donate-body">
+                <div class="donate-info">
+                    <div class="donate-line">Ngân hàng: TECHCOMBANK</div>
+                    <div class="donate-line">STK: 9503299999</div>
+                    <div class="donate-line">Tên: HUYNH HONG PHUC</div>
+                    <div class="donate-line">Cảm ơn mọi người đã ủng hộ, mình sẽ cố gắng tạo thêm nhiều mẫu mới xịn xò hơn!</div>
+                </div>
+                <div class="donate-qr">
+                    <img src="QR.jpg" alt="QR Code" onerror="this.parentElement.style.display='none'">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script>
+        let allPokemon = [];
+        let currentSlot = 0;
+        let typeCache = {};
+        // Đã cập nhật limit lên 1500 để lấy đủ toàn bộ danh sách Pokémon mới nhất
+        const apiUrl = "https://pokeapi.co/api/v2/pokemon?limit=1500";
+
+        // --- TRAINER DATA ---
+        const trainerData = {
+            male: [
+                { file: "1.png", name: "Red" }, { file: "3.webp", name: "Ethan" },
+                { file: "5.webp", name: "Ash Gen 2" }, { file: "7.png", name: "Ash Gen 5" },
+                { file: "9.png", name: "Takeshi" }, { file: "11.webp", name: "JAY" },
+                { file: "19.png", name: "Red" }, { file: "17.webp", name: "Ethan" },
+                { file: "13.png", name: "Brendan" }, { file: "15.webp", name: "Legend ZA Nam" },
+                { file: "21.png", name: "Kasumi" }, { file: "23.png", name: "May" },
+                { file: "25.png", name: "Kasumi" }, { file: "27.png", name: "May" },
+                { file: "29.png", name: "Kasumi" }, { file: "31.png", name: "May" },
+                { file: "33.png", name: "Kasumi" }, { file: "35.png", name: "May" },
+                { file: "37.png", name: "Kasumi" }, { file: "39.png", name: "May" },
+                { file: "41.png", name: "Kasumi" }, { file: "43.png", name: "May" },
+                { file: "45.png", name: "Kasumi" }, { file: "47.png", name: "May" },
+                { file: "49.png", name: "Kasumi" }, { file: "51.png", name: "May" },
+                { file: "53.png", name: "Kasumi" }, { file: "55.png", name: "May" },
+                { file: "57.png", name: "Kasumi" }, { file: "59.png", name: "May" },
+                { file: "61.png", name: "Kasumi" }, { file: "63.png", name: "May" },
+                { file: "65.png", name: "Kasumi" }, { file: "67.png", name: "May" },
+                { file: "69.png", name: "Kasumi" }
+            ],
+            female: [
+                { file: "2.png", name: "Leaf" }, { file: "4.webp", name: "Serena" },
+                { file: "6.png", name: "Kasumi" }, { file: "8.png", name: "May" },
+                { file: "10.webp", name: "Legend ZA Nữ" }, { file: "12.png", name: "Hikari" },
+                { file: "14.webp", name: "Diantha" },{ file: "16.png", name: "Diantha" },
+                { file: "18.png", name: "Kasumi" }, { file: "20.png", name: "May" },
+                { file: "24.png", name: "Kasumi" }, { file: "22.png", name: "May" },
+                { file: "26.png", name: "Kasumi" }, { file: "28.png", name: "May" },
+                { file: "30.png", name: "Kasumi" }, { file: "32.png", name: "May" },
+                { file: "34.png", name: "Kasumi" }, { file: "36.png", name: "May" },
+                { file: "38.png", name: "Kasumi" }, { file: "40.png", name: "May" },
+                { file: "42.png", name: "Kasumi" }, { file: "44.png", name: "May" },
+                { file: "46.png", name: "Kasumi" }, { file: "48.png", name: "Kasumi" },
+                { file: "50.png", name: "Kasumi" }, { file: "52.png", name: "May" },
+                { file: "56.png", name: "Kasumi" }, { file: "54.png", name: "May" },
+                { file: "60.png", name: "Kasumi" }, { file: "58.png", name: "May" }
+            ]
+        };
+        let currentGender = 'male';
+        let currentTrainerFile = '1.png';
+
+        window.onload = async () => {
+            setupInputs();
+            randomId();
+            setGender('male');
+            await loadPokemonData();
+            resizeCard();
+        };
+
+        window.onresize = resizeCard;
+
+        function resizeCard() {
+            const container = document.querySelector('.preview-area');
+            const scaler = document.querySelector('.card-scaler');
+            const cardWidth = 700;
+            const padding = 40;
+            const availableWidth = container.offsetWidth - padding;
+
+            if (availableWidth < cardWidth) {
+                const scale = availableWidth / cardWidth;
+                scaler.style.transform = `scale(${scale})`;
+                container.style.height = (480 * scale + 50) + 'px';
+            } else {
+                scaler.style.transform = 'scale(1)';
+                container.style.height = 'auto';
+            }
+        }
+
+        function openDonate() { document.getElementById('donateModal').style.display = 'flex'; }
+        function closeDonate() { document.getElementById('donateModal').style.display = 'none'; }
+
+        // --- TRAINER SELECTION LOGIC ---
+        function setGender(gender) {
+            currentGender = gender;
+            document.getElementById('btnMale').classList.toggle('active', gender === 'male');
+            document.getElementById('btnFemale').classList.toggle('active', gender === 'female');
+            renderTrainers();
+        }
+
+        function renderTrainers() {
+            const grid = document.getElementById('trainerGrid');
+            grid.innerHTML = '';
+            
+            trainerData[currentGender].forEach(t => {
+                const div = document.createElement('div');
+                div.className = `trainer-item ${t.file === currentTrainerFile ? 'selected' : ''}`;
+                div.onclick = () => selectTrainer(t.file);
+                div.innerHTML = `<img src="image/${t.file}" alt="${t.name}" title="${t.name}" onerror="this.src=''">`;
+                grid.appendChild(div);
+            });
+
+            if (!trainerData[currentGender].find(x => x.file === currentTrainerFile)) {
+                selectTrainer(trainerData[currentGender][0].file);
+            }
+        }
+
+        async function selectTrainer(fileName) {
+            currentTrainerFile = fileName;
+            renderTrainers();
+            
+            const imgElement = document.getElementById('trainerImg');
+            imgElement.src = '';
+            
+            try {
+                const response = await fetch(`image/${fileName}`);
+                if (!response.ok) throw new Error("File not found");
+                const blob = await response.blob();
+                const reader = new FileReader();
+                reader.onloadend = () => { imgElement.src = reader.result; }
+                reader.readAsDataURL(blob);
+            } catch (err) {
+                imgElement.src = `image/${fileName}`;
+            }
+        }
+
+        function setupInputs() {
+            document.getElementById('inpName').addEventListener('input', (e) => {
+                document.getElementById('valName').innerText = e.target.value || "Unknown";
+            });
+            document.getElementById('inpId').addEventListener('input', (e) => {
+                document.getElementById('valId').innerText = e.target.value;
+            });
+            document.getElementById('inpDob').addEventListener('change', (e) => {
+                document.getElementById('valDob').innerText = formatDate(e.target.value);
+            });
+            document.getElementById('inpStart').addEventListener('change', (e) => {
+                document.getElementById('valStart').innerText = formatDate(e.target.value);
+            });
+        }
+        
+        function formatDate(dateStr) {
+            if(!dateStr) return "--/--/----";
+            const [y, m, d] = dateStr.split('-');
+            return `${d}/${m}/${y}`;
+        }
+
+        function updateMoney(val) { document.getElementById('valMoney').innerText = val; }
+        function updateClass(val) { document.getElementById('valClass').innerText = val; }
+        
+        function randomId() {
+            const id = Math.floor(Math.random() * 90000) + 10000;
+            const str = "ID: " + id;
+            document.getElementById('valId').innerText = str;
+            document.getElementById('inpId').value = str;
+        }
+        function changeIdColor(color) {
+            const el = document.getElementById('valId');
+            el.style.color = color; el.style.borderColor = color;
+        }
+        function changeFont() {
+            const fontClass = document.getElementById('fontSelect').value;
+            const card = document.getElementById('trainer-card');
+            card.className = fontClass;
+        }
+        function setBg(type) {
+            const card = document.getElementById('trainer-card');
+            let bg;
+            switch(type) {
+                case 'water': bg = "linear-gradient(135deg, #29b6f6, #01579b)"; break;
+                case 'grass': bg = "linear-gradient(135deg, #66bb6a, #1b5e20)"; break;
+                case 'electric': bg = "linear-gradient(135deg, #ffee58, #f57f17)"; break;
+                case 'ice': bg = "linear-gradient(135deg, #80deea, #006064)"; break;
+                case 'fighting': bg = "linear-gradient(135deg, #ef5350, #b71c1c)"; break;
+                case 'poison': bg = "linear-gradient(135deg, #ab47bc, #4a148c)"; break;
+                case 'ground': bg = "linear-gradient(135deg, #8d6e63, #3e2723)"; break;
+                case 'flying': bg = "linear-gradient(135deg, #90caf9, #1565c0)"; break;
+                case 'psychic': bg = "linear-gradient(135deg, #f48fb1, #880e4f)"; break;
+                case 'bug': bg = "linear-gradient(135deg, #c5e1a5, #33691e)"; break;
+                case 'steel': bg = "linear-gradient(135deg, #b0bec5, #37474f)"; break;
+                default: bg = "linear-gradient(135deg, #e53935, #b71c1c)";
+            }
+            card.style.background = bg;
+        }
+
+        // --- POKEMON LOGIC ---
+        async function loadPokemonData() {
+            try {
+                const res = await fetch(apiUrl);
+                const data = await res.json();
+                allPokemon = data.results.map(p => {
+                    const id = parseInt(p.url.split('/').slice(-2, -1)[0]);
+                    return {
+                        name: p.name,
+                        id: id,
+                        img: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`
+                    };
+                }).filter(p => p.id < 10500); // Lọc id để lấy các dạng chính, bỏ qua một số biến thể đặc biệt có ID khổng lồ
+                
+                renderPokeList(allPokemon);
+            } catch (e) {
+                console.error("Lỗi API:", e);
+                document.getElementById('pokeList').innerHTML = '<div style="color:red; grid-column:1/-1">Lỗi tải dữ liệu. Vui lòng thử lại sau!</div>';
+            }
+        }
+
+        function renderPokeList(list) {
+            const container = document.getElementById('pokeList');
+            container.innerHTML = "";
+            
+            const fragment = document.createDocumentFragment();
+            
+            list.forEach(p => {
+                const div = document.createElement('div');
+                div.className = 'poke-item';
+                div.innerHTML = `<img src="${p.img}" width="70" loading="lazy" crossorigin="anonymous" onerror="this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${p.id}.png'"><div style="font-size:0.8rem;text-transform:capitalize;margin-top:5px;font-weight:bold;color:#444">${p.name.replace(/-/g,' ')}</div>`;
+                div.onclick = () => selectPokemon(p);
+                fragment.appendChild(div);
+            });
+            
+            if (list.length === 0) {
+                container.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding: 20px; color: #888;">Không tìm thấy Pokémon nào.</div>';
+            } else {
+                container.appendChild(fragment);
+            }
+        }
+        
+        async function filterPoke() {
+            const q = document.getElementById('searchPoke').value.toLowerCase();
+            const type = document.getElementById('typePoke').value;
+            
+            let filteredList = allPokemon;
+
+            if (type !== 'all') {
+                if (!typeCache[type]) {
+                    document.getElementById('pokeList').innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding: 20px; color: var(--secondary);"><i class="fas fa-spinner fa-spin" style="font-size:2rem"></i><br><br>Đang tải dữ liệu hệ...</div>';
+                    try {
+                        const res = await fetch(`https://pokeapi.co/api/v2/type/${type}`);
+                        const data = await res.json();
+                        typeCache[type] = data.pokemon.map(p => p.pokemon.name);
+                    } catch (e) {
+                        console.error("Lỗi tải Hệ:", e);
+                        typeCache[type] = [];
+                    }
+                }
+                filteredList = filteredList.filter(p => typeCache[type].includes(p.name));
+            }
+
+            if (q.length > 0) {
+                filteredList = filteredList.filter(p => p.name.includes(q));
+            }
+
+            renderPokeList(filteredList);
+        }
+
+        function openModal(idx) { currentSlot = idx; document.getElementById('pokeModal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('pokeModal').style.display = 'none'; }
+
+        async function selectPokemon(poke) {
+            const slot = document.getElementById(`slot-${currentSlot}`);
+            slot.innerHTML = '<i class="fas fa-spinner fa-spin" style="color:#fff; font-size:1.5rem"></i>';
+            closeModal();
+            try {
+                const res = await fetch(poke.img);
+                if(!res.ok) throw new Error("Image error");
+                const blob = await res.blob();
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    slot.innerHTML = `<img src="${reader.result}" alt="${poke.name}"><div class="remove-poke" onclick="event.stopPropagation();clearSlot(${currentSlot})">x</div>`;
+                }
+                reader.readAsDataURL(blob);
+            } catch (e) {
+                slot.innerHTML = `<img src="${poke.img}" crossorigin="anonymous" onerror="this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${poke.id}.png'"><div class="remove-poke" onclick="event.stopPropagation();clearSlot(${currentSlot})">x</div>`;
+            }
+        }
+        function clearSlot(idx) { document.getElementById(`slot-${idx}`).innerHTML = '<i class="fas fa-plus" style="opacity:0.6;color:#fff;font-size:1.5rem"></i>'; }
+
+        // --- BẢN FIX LỖI DOWNLOAD TREO "ĐANG XỬ LÝ" ---
+        function downloadCard() {
+            const btn = document.querySelector('.btn-save');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ĐANG XỬ LÝ...';
+            btn.disabled = true; // Khóa nút bấm chống spam click
+            
+            const card = document.getElementById('trainer-card');
+            const scaler = document.querySelector('.card-scaler');
+            const originalTransform = scaler.style.transform;
+            
+            // Xử lý UI trước khi chụp
+            window.scrollTo(0, 0); // Scroll lên top để canvas không bị cắt xén
+            scaler.style.transform = 'scale(1)';
+            card.style.boxShadow = "none";
+            card.style.borderRadius = "0";
+
+            // TẮT TẠM THỜI DROP SHADOW CỦA ẢNH (Khắc phục lỗi treo cứng html2canvas)
+            const images = card.querySelectorAll('img');
+            const originalFilters = [];
+            images.forEach((img, i) => {
+                originalFilters[i] = img.style.filter;
+                img.style.filter = 'none';
+            });
+
+            // Cho trình duyệt độ trễ nhỏ để apply CSS trước khi chụp
+            setTimeout(() => { 
+                html2canvas(card, {
+                    scale: 2, // Giảm scale xuống 2 để chống văng lỗi thiếu Memory trên thiết bị yếu
+                    useCORS: true,
+                    backgroundColor: null,
+                    logging: false // Tắt log console cho nhẹ
+                }).then(canvas => {
+                    // Trả lại UI nguyên trạng
+                    scaler.style.transform = originalTransform;
+                    card.style.boxShadow = "";
+                    card.style.borderRadius = "20px";
+                    images.forEach((img, i) => img.style.filter = originalFilters[i]);
+                    
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+
+                    // Tiến hành tải ảnh
+                    const link = document.createElement('a');
+                    link.download = `TrainerCard-${document.getElementById('valId').innerText}.png`;
+                    link.href = canvas.toDataURL("image/png");
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }).catch(err => {
+                    // Trả lại UI nguyên trạng nếu gặp lỗi
+                    scaler.style.transform = originalTransform;
+                    card.style.boxShadow = "";
+                    card.style.borderRadius = "20px";
+                    images.forEach((img, i) => img.style.filter = originalFilters[i]);
+                    
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    
+                    console.error("Lỗi xuất ảnh Canvas:", err);
+                    alert("⚠️ Lỗi xuất ảnh! Nếu bạn đang mở trực tiếp file HTML trên máy, hãy thử chạy web qua một Local Server để tránh bị trình duyệt chặn bảo mật CORS nhé.");
+                });
+            }, 300);
+        }
+        
+        window.onclick = (e) => { if(e.target == document.getElementById('pokeModal')) closeModal(); }
+    </script>
+</body>
+</html>
