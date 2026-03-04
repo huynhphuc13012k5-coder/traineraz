@@ -388,6 +388,22 @@
             .preview-area { width: 100%; align-items: center; }
             .filter-group { flex-direction: column; }
         }
+
+        /* --- CSS CỰC KỲ QUAN TRỌNG ĐỂ FIX LỖI KHI XUẤT ẢNH --- */
+        .export-mode * {
+            box-shadow: none !important; /* Tắt toàn bộ bóng đổ để html2canvas không bị treo */
+            filter: none !important; /* Tắt drop-shadow */
+        }
+        .export-mode #trainer-card {
+            border-radius: 0 !important; /* Để xuất ảnh vuông vức chuẩn xác */
+        }
+        .export-mode .poke-slot {
+            background: rgba(0, 0, 0, 0.1) !important; /* KHẮC PHỤC LỖI NỀN ĐEN: Giảm alpha xuống 0.1 thay vì 0.3 */
+            border-color: rgba(255, 255, 255, 0.6) !important;
+        }
+        .export-mode .avatar-box {
+            background: rgba(255, 255, 255, 0.1) !important; 
+        }
     </style>
 </head>
 <body>
@@ -580,7 +596,6 @@
         let allPokemon = [];
         let currentSlot = 0;
         let typeCache = {};
-        // Đã cập nhật limit lên 1500 để lấy đủ toàn bộ danh sách Pokémon mới nhất
         const apiUrl = "https://pokeapi.co/api/v2/pokemon?limit=1500";
 
         // --- TRAINER DATA ---
@@ -771,7 +786,7 @@
                         id: id,
                         img: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`
                     };
-                }).filter(p => p.id < 10500); // Lọc id để lấy các dạng chính, bỏ qua một số biến thể đặc biệt có ID khổng lồ
+                }).filter(p => p.id < 10500);
                 
                 renderPokeList(allPokemon);
             } catch (e) {
@@ -851,67 +866,62 @@
         }
         function clearSlot(idx) { document.getElementById(`slot-${idx}`).innerHTML = '<i class="fas fa-plus" style="opacity:0.6;color:#fff;font-size:1.5rem"></i>'; }
 
-        // --- BẢN FIX LỖI DOWNLOAD TREO "ĐANG XỬ LÝ" ---
+        // --- BẢN FIX ĐÃ ĐƯỢC BỌC TRY-CATCH VÀ XỬ LÝ NỀN ĐEN ---
         function downloadCard() {
             const btn = document.querySelector('.btn-save');
             const originalText = btn.innerHTML;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ĐANG XỬ LÝ...';
-            btn.disabled = true; // Khóa nút bấm chống spam click
+            btn.disabled = true; 
             
             const card = document.getElementById('trainer-card');
             const scaler = document.querySelector('.card-scaler');
             const originalTransform = scaler.style.transform;
             
-            // Xử lý UI trước khi chụp
-            window.scrollTo(0, 0); // Scroll lên top để canvas không bị cắt xén
+            // Cuộn trang lên đầu để đảm bảo không bị cắt xén do scroll
+            window.scrollTo(0, 0); 
             scaler.style.transform = 'scale(1)';
-            card.style.boxShadow = "none";
-            card.style.borderRadius = "0";
+            
+            // Thêm class export-mode để áp dụng CSS Fix lỗi nền đen và lỗi treo bóng đổ
+            card.classList.add('export-mode');
 
-            // TẮT TẠM THỜI DROP SHADOW CỦA ẢNH (Khắc phục lỗi treo cứng html2canvas)
-            const images = card.querySelectorAll('img');
-            const originalFilters = [];
-            images.forEach((img, i) => {
-                originalFilters[i] = img.style.filter;
-                img.style.filter = 'none';
-            });
-
-            // Cho trình duyệt độ trễ nhỏ để apply CSS trước khi chụp
+            // Đợi 1 chút xíu để trình duyệt kịp apply CSS mới
             setTimeout(() => { 
                 html2canvas(card, {
-                    scale: 2, // Giảm scale xuống 2 để chống văng lỗi thiếu Memory trên thiết bị yếu
+                    scale: 2, 
                     useCORS: true,
+                    allowTaint: false, // Bắt buộc false để DataURL ném lỗi khi bị dính vi phạm CORS
                     backgroundColor: null,
-                    logging: false // Tắt log console cho nhẹ
+                    logging: false 
                 }).then(canvas => {
-                    // Trả lại UI nguyên trạng
-                    scaler.style.transform = originalTransform;
-                    card.style.boxShadow = "";
-                    card.style.borderRadius = "20px";
-                    images.forEach((img, i) => img.style.filter = originalFilters[i]);
-                    
-                    btn.innerHTML = originalText;
-                    btn.disabled = false;
-
-                    // Tiến hành tải ảnh
-                    const link = document.createElement('a');
-                    link.download = `TrainerCard-${document.getElementById('valId').innerText}.png`;
-                    link.href = canvas.toDataURL("image/png");
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
+                    try {
+                        // Trích xuất thành dạng link ảnh. 
+                        // Nếu dính lỗi bảo mật CORS do mở trực tiếp file://, dòng này sẽ phát sinh lỗi và rơi xuống catch
+                        const dataUrl = canvas.toDataURL("image/png");
+                        
+                        // Tạo link tải
+                        const link = document.createElement('a');
+                        link.download = `TrainerCard-${document.getElementById('valId').innerText}.png`;
+                        link.href = dataUrl;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    } catch (e) {
+                        console.error("Lỗi CORS bảo mật trình duyệt:", e);
+                        alert("⚠️ LỖI BẢO MẬT TRÌNH DUYỆT (CORS)!\n\nDo bạn đang mở file trực tiếp bằng đường dẫn dạng file://, trình duyệt đã chặn việc gộp hình ảnh Trainer/Pokemon vào thư mục máy tính.\n\nCÁCH KHẮC PHỤC: Hãy chạy code này qua Local Server (VD: cài extension 'Live Server' trên VSCode, sau đó chuột phải vào file code chọn 'Open with Live Server').");
+                    } finally {
+                        // Đoạn mã này sẽ LUÔN ĐƯỢC CHẠY để trả lại giao diện dù thành công hay có lỗi
+                        card.classList.remove('export-mode');
+                        scaler.style.transform = originalTransform;
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+                    }
                 }).catch(err => {
-                    // Trả lại UI nguyên trạng nếu gặp lỗi
+                    console.error("Lỗi Render html2canvas:", err);
+                    alert("⚠️ Có lỗi bất ngờ xảy ra trong quá trình vẽ ảnh, vui lòng thử lại!");
+                    card.classList.remove('export-mode');
                     scaler.style.transform = originalTransform;
-                    card.style.boxShadow = "";
-                    card.style.borderRadius = "20px";
-                    images.forEach((img, i) => img.style.filter = originalFilters[i]);
-                    
                     btn.innerHTML = originalText;
                     btn.disabled = false;
-                    
-                    console.error("Lỗi xuất ảnh Canvas:", err);
-                    alert("⚠️ Lỗi xuất ảnh! Nếu bạn đang mở trực tiếp file HTML trên máy, hãy thử chạy web qua một Local Server để tránh bị trình duyệt chặn bảo mật CORS nhé.");
                 });
             }, 300);
         }
