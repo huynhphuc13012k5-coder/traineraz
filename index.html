@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pokemon Trainer Card V1</title>
+    <title>Pokemon Trainer Card V1 - Fixed</title>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Merriweather:wght@400;700;900&family=Nunito:wght@400;700;900&family=Oswald:wght@500;700&family=Patrick+Hand&family=VT323&display=swap&subset=vietnamese" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
@@ -389,20 +389,20 @@
             .filter-group { flex-direction: column; }
         }
 
-        /* --- CSS CỰC KỲ QUAN TRỌNG ĐỂ FIX LỖI KHI XUẤT ẢNH --- */
-        .export-mode * {
-            box-shadow: none !important; /* Tắt toàn bộ bóng đổ để html2canvas không bị treo */
-            filter: none !important; /* Tắt drop-shadow */
-        }
+        /* --- CSS ĐỂ BỎ VIỀN TRONG ẢNH KHI XUẤT (EXPORT-MODE) --- */
         .export-mode #trainer-card {
-            border-radius: 0 !important; /* Để xuất ảnh vuông vức chuẩn xác */
-        }
-        .export-mode .poke-slot {
-            background: rgba(0, 0, 0, 0.1) !important; /* KHẮC PHỤC LỖI NỀN ĐEN: Giảm alpha xuống 0.1 thay vì 0.3 */
-            border-color: rgba(255, 255, 255, 0.6) !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
         }
         .export-mode .avatar-box {
-            background: rgba(255, 255, 255, 0.1) !important; 
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+        }
+        .export-mode .poke-slot {
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
         }
     </style>
 </head>
@@ -479,13 +479,19 @@
                 <div class="bg-btn" style="background: linear-gradient(135deg, #43a047, #1b5e20)" onclick="setBg('grass')" title="Grass"></div>
                 <div class="bg-btn" style="background: linear-gradient(135deg, #ffd700, #f57f17)" onclick="setBg('electric')" title="Electric"></div>
                 <div class="bg-btn" style="background: linear-gradient(135deg, #29b6f6, #01579b)" onclick="setBg('ice')" title="Ice"></div>
-                <div class="bg-btn" style="background: linear-gradient(135deg, #d32f2f, #8e0000)" onclick="setBg('fighting')" title="Fighting"></div>
-                <div class="bg-btn" style="background: linear-gradient(135deg, #ab47bc, #6a1b9a)" onclick="setBg('poison')" title="Poison"></div>
+                <div class="bg-btn" style="background: linear-gradient(135deg, #ef5350, #b71c1c)" onclick="setBg('fighting')" title="Fighting"></div>
+                <div class="bg-btn" style="background: linear-gradient(135deg, #ab47bc, #4a148c)" onclick="setBg('poison')" title="Poison"></div>
                 <div class="bg-btn" style="background: linear-gradient(135deg, #8d6e63, #3e2723)" onclick="setBg('ground')" title="Ground"></div>
                 <div class="bg-btn" style="background: linear-gradient(135deg, #90caf9, #1565c0)" onclick="setBg('flying')" title="Flying"></div>
-                <div class="bg-btn" style="background: linear-gradient(135deg, #f06292, #880e4f)" onclick="setBg('psychic')" title="Psychic"></div>
+                <div class="bg-btn" style="background: linear-gradient(135deg, #f48fb1, #880e4f)" onclick="setBg('psychic')" title="Psychic"></div>
                 <div class="bg-btn" style="background: linear-gradient(135deg, #c5e1a5, #33691e)" onclick="setBg('bug')" title="Bug"></div>
-                <div class="bg-btn" style="background: linear-gradient(135deg, #607d8b, #263238)" onclick="setBg('steel')" title="Steel"></div>
+                <div class="bg-btn" style="background: linear-gradient(135deg, #b0bec5, #37474f)" onclick="setBg('steel')" title="Steel"></div>
+                <div class="bg-btn" style="background: linear-gradient(135deg, #b0bec5, #78909c)" onclick="setBg('normal')" title="Normal"></div>
+                <div class="bg-btn" style="background: linear-gradient(135deg, #8d6e63, #5d4037)" onclick="setBg('rock')" title="Rock"></div>
+                <div class="bg-btn" style="background: linear-gradient(135deg, #ab47bc, #4a148c)" onclick="setBg('ghost')" title="Ghost"></div>
+                <div class="bg-btn" style="background: linear-gradient(135deg, #29b6f6, #01579b)" onclick="setBg('dragon')" title="Dragon"></div>
+                <div class="bg-btn" style="background: linear-gradient(135deg, #212121, #000000)" onclick="setBg('dark')" title="Dark"></div>
+                <div class="bg-btn" style="background: linear-gradient(135deg, #f48fb1, #d81b60)" onclick="setBg('fairy')" title="Fairy"></div>
             </div>
 
             <button class="btn-save" onclick="downloadCard()"><i class="fas fa-download"></i> TẢI CARD VỀ MÁY</button>
@@ -595,7 +601,7 @@
     <script>
         let allPokemon = [];
         let currentSlot = 0;
-        let typeCache = {};
+        let typeCache = {}; // Lưu dữ liệu hệ pokemon để không phải fetch lại nhiều lần
         const apiUrl = "https://pokeapi.co/api/v2/pokemon?limit=1500";
 
         // --- TRAINER DATA ---
@@ -604,38 +610,38 @@
                 { file: "1.png", name: "Red" }, { file: "3.webp", name: "Ethan" },
                 { file: "5.webp", name: "Ash Gen 2" }, { file: "7.png", name: "Ash Gen 5" },
                 { file: "9.png", name: "Takeshi" }, { file: "11.webp", name: "JAY" },
-                { file: "19.png", name: "Red" }, { file: "17.webp", name: "Ethan" },
+				{ file: "19.png", name: "Red" }, { file: "17.webp", name: "Ethan" },
                 { file: "13.png", name: "Brendan" }, { file: "15.webp", name: "Legend ZA Nam" },
-                { file: "21.png", name: "Kasumi" }, { file: "23.png", name: "May" },
-                { file: "25.png", name: "Kasumi" }, { file: "27.png", name: "May" },
-                { file: "29.png", name: "Kasumi" }, { file: "31.png", name: "May" },
-                { file: "33.png", name: "Kasumi" }, { file: "35.png", name: "May" },
-                { file: "37.png", name: "Kasumi" }, { file: "39.png", name: "May" },
-                { file: "41.png", name: "Kasumi" }, { file: "43.png", name: "May" },
-                { file: "45.png", name: "Kasumi" }, { file: "47.png", name: "May" },
-                { file: "49.png", name: "Kasumi" }, { file: "51.png", name: "May" },
-                { file: "53.png", name: "Kasumi" }, { file: "55.png", name: "May" },
-                { file: "57.png", name: "Kasumi" }, { file: "59.png", name: "May" },
-                { file: "61.png", name: "Kasumi" }, { file: "63.png", name: "May" },
-                { file: "65.png", name: "Kasumi" }, { file: "67.png", name: "May" },
-                { file: "69.png", name: "Kasumi" }
+				{ file: "21.png", name: "Kasumi" }, { file: "23.png", name: "May" },
+				{ file: "25.png", name: "Kasumi" }, { file: "27.png", name: "May" },
+				{ file: "29.png", name: "Kasumi" }, { file: "31.png", name: "May" },
+				{ file: "33.png", name: "Kasumi" }, { file: "35.png", name: "May" },
+				{ file: "37.png", name: "Kasumi" }, { file: "39.png", name: "May" },
+				{ file: "41.png", name: "Kasumi" }, { file: "43.png", name: "May" },
+				{ file: "45.png", name: "Kasumi" }, { file: "47.png", name: "May" },
+				{ file: "49.png", name: "Kasumi" }, { file: "51.png", name: "May" },
+				{ file: "53.png", name: "Kasumi" }, { file: "55.png", name: "May" },
+				{ file: "57.png", name: "Kasumi" }, { file: "59.png", name: "May" },
+				{ file: "61.png", name: "Kasumi" }, { file: "63.png", name: "May" },
+				{ file: "65.png", name: "Kasumi" }, { file: "67.png", name: "May" },
+				{ file: "69.png", name: "Kasumi" }
             ],
             female: [
                 { file: "2.png", name: "Leaf" }, { file: "4.webp", name: "Serena" },
                 { file: "6.png", name: "Kasumi" }, { file: "8.png", name: "May" },
                 { file: "10.webp", name: "Legend ZA Nữ" }, { file: "12.png", name: "Hikari" },
                 { file: "14.webp", name: "Diantha" },{ file: "16.png", name: "Diantha" },
-                { file: "18.png", name: "Kasumi" }, { file: "20.png", name: "May" },
-                { file: "24.png", name: "Kasumi" }, { file: "22.png", name: "May" },
-                { file: "26.png", name: "Kasumi" }, { file: "28.png", name: "May" },
-                { file: "30.png", name: "Kasumi" }, { file: "32.png", name: "May" },
-                { file: "34.png", name: "Kasumi" }, { file: "36.png", name: "May" },
-                { file: "38.png", name: "Kasumi" }, { file: "40.png", name: "May" },
-                { file: "42.png", name: "Kasumi" }, { file: "44.png", name: "May" },
-                { file: "46.png", name: "Kasumi" }, { file: "48.png", name: "Kasumi" },
-                { file: "50.png", name: "Kasumi" }, { file: "52.png", name: "May" },
-                { file: "56.png", name: "Kasumi" }, { file: "54.png", name: "May" },
-                { file: "60.png", name: "Kasumi" }, { file: "58.png", name: "May" }
+				{ file: "18.png", name: "Kasumi" }, { file: "20.png", name: "May" },
+				{ file: "24.png", name: "Kasumi" }, { file: "22.png", name: "May" },
+				{ file: "26.png", name: "Kasumi" }, { file: "28.png", name: "May" },
+				{ file: "30.png", name: "Kasumi" }, { file: "32.png", name: "May" },
+				{ file: "34.png", name: "Kasumi" }, { file: "36.png", name: "May" },
+				{ file: "38.png", name: "Kasumi" }, { file: "40.png", name: "May" },
+				{ file: "42.png", name: "Kasumi" }, { file: "44.png", name: "May" },
+				{ file: "46.png", name: "Kasumi" }, { file: "48.png", name: "Kasumi" },
+				{ file: "50.png", name: "Kasumi" }, { file: "52.png", name: "May" },
+				{ file: "56.png", name: "Kasumi" }, { file: "54.png", name: "May" },
+				{ file: "60.png", name: "Kasumi" }, { file: "58.png", name: "May" }
             ]
         };
         let currentGender = 'male';
@@ -644,7 +650,7 @@
         window.onload = async () => {
             setupInputs();
             randomId();
-            setGender('male');
+            setGender('male'); // Khởi tạo UI chọn Trainer 
             await loadPokemonData();
             resizeCard();
         };
@@ -676,7 +682,14 @@
             currentGender = gender;
             document.getElementById('btnMale').classList.toggle('active', gender === 'male');
             document.getElementById('btnFemale').classList.toggle('active', gender === 'female');
-            renderTrainers();
+            
+            // Lấy nhân vật đầu tiên của giới tính mới
+            currentTrainerFile = trainerData[gender][0].file;
+            renderTrainers(); // Làm mới lại lưới
+            
+            // Tải ảnh nhân vật lên Card
+            const imgElement = document.getElementById('trainerImg');
+            imgElement.src = `image/${currentTrainerFile}`;
         }
 
         function renderTrainers() {
@@ -687,23 +700,21 @@
                 const div = document.createElement('div');
                 div.className = `trainer-item ${t.file === currentTrainerFile ? 'selected' : ''}`;
                 div.onclick = () => selectTrainer(t.file);
+                // Hiển thị ảnh (sử dụng local folder theo cấu trúc cũ)
                 div.innerHTML = `<img src="image/${t.file}" alt="${t.name}" title="${t.name}" onerror="this.src=''">`;
                 grid.appendChild(div);
             });
-
-            if (!trainerData[currentGender].find(x => x.file === currentTrainerFile)) {
-                selectTrainer(trainerData[currentGender][0].file);
-            }
         }
 
         async function selectTrainer(fileName) {
             currentTrainerFile = fileName;
-            renderTrainers();
+            renderTrainers(); // Làm mới lại grid để gắn class 'selected'
             
             const imgElement = document.getElementById('trainerImg');
             imgElement.src = '';
             
             try {
+                // Thử fetch ảnh dưới dạng blob để chuyển sang DataURL (cross-origin fix)
                 const response = await fetch(`image/${fileName}`);
                 if (!response.ok) throw new Error("File not found");
                 const blob = await response.blob();
@@ -711,6 +722,7 @@
                 reader.onloadend = () => { imgElement.src = reader.result; }
                 reader.readAsDataURL(blob);
             } catch (err) {
+                // Fallback nếu chạy trực tiếp không qua server (local file)
                 imgElement.src = `image/${fileName}`;
             }
         }
@@ -769,6 +781,13 @@
                 case 'psychic': bg = "linear-gradient(135deg, #f48fb1, #880e4f)"; break;
                 case 'bug': bg = "linear-gradient(135deg, #c5e1a5, #33691e)"; break;
                 case 'steel': bg = "linear-gradient(135deg, #b0bec5, #37474f)"; break;
+                // MÀU MỚI THÊM
+                case 'normal': bg = "linear-gradient(135deg, #b0bec5, #78909c)"; break;
+                case 'rock': bg = "linear-gradient(135deg, #8d6e63, #5d4037)"; break;
+                case 'ghost': bg = "linear-gradient(135deg, #ab47bc, #4a148c)"; break;
+                case 'dragon': bg = "linear-gradient(135deg, #29b6f6, #01579b)"; break;
+                case 'dark': bg = "linear-gradient(135deg, #212121, #000000)"; break;
+                case 'fairy': bg = "linear-gradient(135deg, #f48fb1, #d81b60)"; break;
                 default: bg = "linear-gradient(135deg, #e53935, #b71c1c)";
             }
             card.style.background = bg;
@@ -822,6 +841,7 @@
             
             let filteredList = allPokemon;
 
+            // Xử lý Lọc theo hệ
             if (type !== 'all') {
                 if (!typeCache[type]) {
                     document.getElementById('pokeList').innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding: 20px; color: var(--secondary);"><i class="fas fa-spinner fa-spin" style="font-size:2rem"></i><br><br>Đang tải dữ liệu hệ...</div>';
@@ -834,9 +854,11 @@
                         typeCache[type] = [];
                     }
                 }
+                // Lọc những pokemon có tên nằm trong mảng typeCache của hệ đang chọn
                 filteredList = filteredList.filter(p => typeCache[type].includes(p.name));
             }
 
+            // Xử lý Lọc theo tên
             if (q.length > 0) {
                 filteredList = filteredList.filter(p => p.name.includes(q));
             }
@@ -852,6 +874,7 @@
             slot.innerHTML = '<i class="fas fa-spinner fa-spin" style="color:#fff; font-size:1.5rem"></i>';
             closeModal();
             try {
+                // Thử fetch ảnh dưới dạng blob để chuyển sang DataURL (cross-origin fix)
                 const res = await fetch(poke.img);
                 if(!res.ok) throw new Error("Image error");
                 const blob = await res.blob();
@@ -861,17 +884,18 @@
                 }
                 reader.readAsDataURL(blob);
             } catch (e) {
+                // Fallback nếu chạy trực tiếp không qua server (local file hoặc fetch bị lỗi)
                 slot.innerHTML = `<img src="${poke.img}" crossorigin="anonymous" onerror="this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${poke.id}.png'"><div class="remove-poke" onclick="event.stopPropagation();clearSlot(${currentSlot})">x</div>`;
             }
         }
         function clearSlot(idx) { document.getElementById(`slot-${idx}`).innerHTML = '<i class="fas fa-plus" style="opacity:0.6;color:#fff;font-size:1.5rem"></i>'; }
 
-        // --- BẢN FIX ĐÃ ĐƯỢC BỌC TRY-CATCH VÀ XỬ LÝ NỀN ĐEN ---
+        // --- FIXED: BẢN FIX LỖI DOWNLOAD TREO VÀ LỖI NỀN ĐEN ---
         function downloadCard() {
             const btn = document.querySelector('.btn-save');
             const originalText = btn.innerHTML;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ĐANG XỬ LÝ...';
-            btn.disabled = true; 
+            btn.disabled = true; // Khóa nút bấm chống spam click
             
             const card = document.getElementById('trainer-card');
             const scaler = document.querySelector('.card-scaler');
@@ -881,24 +905,32 @@
             window.scrollTo(0, 0); 
             scaler.style.transform = 'scale(1)';
             
-            // Thêm class export-mode để áp dụng CSS Fix lỗi nền đen và lỗi treo bóng đổ
+            // BẮT ĐẦU FIX LỖI: Thêm class export-mode để áp dụng CSS Fix
             card.classList.add('export-mode');
 
-            // Đợi 1 chút xíu để trình duyệt kịp apply CSS mới
+            // Bỏ bo góc tạm thời của thẻ để xuất ảnh vuông vức chuẩn xác
+            const originalBorderRadius = card.style.borderRadius;
+            card.style.borderRadius = "0";
+
+            // TẮT TẠM THỜI DROP SHADOW CỦA ẢNH (Khắc phục lỗi treo html2canvas)
+            const images = card.querySelectorAll('img');
+            const originalFilters = [];
+            images.forEach((img, i) => {
+                originalFilters[i] = img.style.filter;
+                img.style.filter = 'none';
+            });
+
+            // Cho trình duyệt độ trễ nhỏ để apply CSS trước khi chụp
             setTimeout(() => { 
                 html2canvas(card, {
-                    scale: 2, 
+                    scale: 2, // Giảm scale xuống 2 để chống văng lỗi Memory trên thiết bị yếu
                     useCORS: true,
                     allowTaint: false, // Bắt buộc false để DataURL ném lỗi khi bị dính vi phạm CORS
                     backgroundColor: null,
-                    logging: false 
+                    logging: false // Tắt log console cho nhẹ
                 }).then(canvas => {
                     try {
-                        // Trích xuất thành dạng link ảnh. 
-                        // Nếu dính lỗi bảo mật CORS do mở trực tiếp file://, dòng này sẽ phát sinh lỗi và rơi xuống catch
                         const dataUrl = canvas.toDataURL("image/png");
-                        
-                        // Tạo link tải
                         const link = document.createElement('a');
                         link.download = `TrainerCard-${document.getElementById('valId').innerText}.png`;
                         link.href = dataUrl;
@@ -909,9 +941,11 @@
                         console.error("Lỗi CORS bảo mật trình duyệt:", e);
                         alert("⚠️ LỖI BẢO MẬT TRÌNH DUYỆT (CORS)!\n\nDo bạn đang mở file trực tiếp bằng đường dẫn dạng file://, trình duyệt đã chặn việc gộp hình ảnh Trainer/Pokemon vào thư mục máy tính.\n\nCÁCH KHẮC PHỤC: Hãy chạy code này qua Local Server (VD: cài extension 'Live Server' trên VSCode, sau đó chuột phải vào file code chọn 'Open with Live Server').");
                     } finally {
-                        // Đoạn mã này sẽ LUÔN ĐƯỢC CHẠY để trả lại giao diện dù thành công hay có lỗi
+                        // KẾT THÚC FIX LỖI: Trả lại UI nguyên trạng
                         card.classList.remove('export-mode');
+                        card.style.borderRadius = originalBorderRadius;
                         scaler.style.transform = originalTransform;
+                        images.forEach((img, i) => img.style.filter = originalFilters[i]);
                         btn.innerHTML = originalText;
                         btn.disabled = false;
                     }
@@ -919,7 +953,9 @@
                     console.error("Lỗi Render html2canvas:", err);
                     alert("⚠️ Có lỗi bất ngờ xảy ra trong quá trình vẽ ảnh, vui lòng thử lại!");
                     card.classList.remove('export-mode');
+                    card.style.borderRadius = originalBorderRadius;
                     scaler.style.transform = originalTransform;
+                    images.forEach((img, i) => img.style.filter = originalFilters[i]);
                     btn.innerHTML = originalText;
                     btn.disabled = false;
                 });
