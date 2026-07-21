@@ -175,7 +175,6 @@
         }
 
         .ad-top {
-            /* Tự động co giãn để vừa với Native Banner của bạn */
             height: auto;
             min-height: 90px;
             font-size: 0.9rem;
@@ -246,7 +245,7 @@
         }
         .close-ad-btn:hover { background: rgba(255,255,255,0.2); }
 
-        /* === GALLERY GRID CAO CẤP === */
+        /* === GALLERY GRID CAO CẤP (ĐÃ CẬP NHẬT ĐỂ TỰ CO GIÃN THEO ẢNH) === */
         .gallery {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -254,6 +253,7 @@
             padding: 20px;
             max-width: 1200px;
             margin: 0 auto;
+            align-items: start; /* Ngăn card bị kéo giãn theo chiều dọc */
         }
 
         .card {
@@ -278,31 +278,29 @@
 
         .card-img-wrapper {
             width: 100%;
-            height: 300px;
+            /* Đã xóa fixed height để ảnh tự quyết định chiều cao */
             background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, rgba(0,0,0,0.2) 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
             overflow: hidden;
             position: relative;
+            cursor: zoom-in; /* Đổi icon trỏ chuột báo hiệu có thể click */
         }
 
         .card img {
-            width: 80%;
-            height: auto;
-            object-fit: contain;
-            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3));
+            width: 100%; /* Ép ảnh bung đầy 100% chiều ngang khung */
+            height: auto; /* Chiều cao tự động co giãn theo tỷ lệ */
+            display: block; /* Xóa khoảng trống thừa dưới chân ảnh */
+            object-fit: cover;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2));
             transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
         }
 
         .card:hover img {
-            transform: scale(1.12) rotate(2deg);
+            transform: scale(1.08) rotate(2deg);
         }
 
         .card-info {
             padding: 24px;
             text-align: center;
-            margin-top: auto;
             background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);
         }
 
@@ -314,7 +312,7 @@
             letter-spacing: 0.5px;
         }
 
-        /* === NÚT BẤM SIÊU CẤP ĐỔI MỚI === */
+        /* === NÚT BẤM SIÊU CẤP === */
         .btn-download {
             background: var(--primary-gradient);
             color: #ffffff;
@@ -344,10 +342,7 @@
             transition: all 0.6s ease;
         }
 
-        .btn-download:hover::before {
-            left: 100%;
-        }
-
+        .btn-download:hover::before { left: 100%; }
         .btn-download:hover {
             background: var(--primary-hover);
             transform: translateY(-2px);
@@ -368,7 +363,6 @@
             text-align: center;
             padding: 20px;
         }
-
         .ad-modal.active { display: flex; }
 
         .mock-ad-content {
@@ -386,14 +380,12 @@
             border-radius: 20px;
             box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
-
         .countdown-text {
             font-size: 1.3rem;
             margin-bottom: 25px;
             color: #60a5fa;
             font-weight: 600;
         }
-
         .btn-real-download {
             background: linear-gradient(135deg, #10b981, #059669);
             color: white;
@@ -412,15 +404,54 @@
             box-shadow: 0 12px 30px rgba(16, 185, 129, 0.6);
         }
 
-        /* Tối ưu hóa đa thiết bị (Responsive) */
+        /* === MODAL XEM TRƯỚC ẢNH (TÍNH NĂNG MỚI) === */
+        .preview-modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 10000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            cursor: zoom-out;
+        }
+        .preview-modal.active { display: flex; }
+        .preview-modal img {
+            max-width: 90%;
+            max-height: 90vh;
+            border-radius: 12px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+            animation: zoomIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: default;
+        }
+        @keyframes zoomIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .close-preview {
+            position: absolute;
+            top: 25px; right: 35px;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: color 0.3s;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
+        .close-preview:hover { color: #f43f5e; }
+
+        /* Tối ưu hóa đa thiết bị */
         @media (max-width: 768px) {
             .controls { flex-direction: column; gap: 10px; padding: 12px; border-radius: 16px; }
             input[type="text"], select, .btn-action { width: 100%; padding: 12px 16px; }
             .logo { font-size: 2.2rem; margin-bottom: 15px; }
             header { padding: 20px 10px; }
             .gallery { gap: 20px; padding: 10px; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
-            .card-img-wrapper { height: 250px; }
             .ad-bottom-sticky { font-size: 0.8rem; height: 60px; bottom: 10px; }
+            .close-preview { top: 15px; right: 20px; font-size: 35px; }
         }
     </style>
 </head>
@@ -451,12 +482,19 @@
     <!-- Gallery Chứa Hình Nền -->
     <div class="gallery" id="gallery"></div>
 
-    <!-- Banner Quảng Cáo Dính Đáy (Dạng Text Fallback - Vì Popunder chạy ngầm) -->
+    <!-- Banner Quảng Cáo Dính Đáy -->
     <div class="ad-bottom-sticky" id="stickyAd">
         <a href="#" class="ad-link" style="flex-direction: row; pointer-events: none;">
             <span id="ad-sticky-text">Quảng cáo tài trợ hiển thị tại đây thiết kế tối ưu trên Mobile</span>
         </a>
         <button class="close-ad-btn" onclick="document.getElementById('stickyAd').style.display='none'">✕</button>
+    </div>
+
+    <!-- MODAL XEM TRƯỚC ẢNH (Tính năng mới) -->
+    <div class="preview-modal" id="previewModal" onclick="closePreview()">
+        <span class="close-preview">&times;</span>
+        <!-- Ngăn việc click vào ảnh lại đóng popup -->
+        <img id="previewImage" src="" alt="Preview" onclick="event.stopPropagation()">
     </div>
 
     <!-- POPUP MÀN HÌNH CHỜ KHI TẢI -->
@@ -533,12 +571,12 @@
         // DANH SÁCH DỮ LIỆU HÌNH NỀN
         // =========================================================================
         const wallpapers = [
-            { id: 25, name: 'Pikachu', type: 'Electric', gen: 1, img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png' },
+            { id: 1, name: 'Bulbasaur', type: 'Grass', gen: 1, img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png' },
             { id: 6, name: 'Charizard', type: 'Fire', gen: 1, img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png' },
+            { id: 25, name: 'Pikachu', type: 'Electric', gen: 1, img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png' },
+            { id: 150, name: 'Mewtwo', type: 'Psychic', gen: 1, img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/150.png' },
+            { id: 384, name: 'Rayquaza', type: 'Dragon', gen: 3, img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/384.png' },
             { id: 658, name: 'Greninja', type: 'Water', gen: 6, img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/658.png' },
-            { id: 1, name: 'Bulbasaur', type: 'Grass', gen: 1, img: '' },
-            { id: 150, name: 'Mewtwo', type: 'Psychic', gen: 1, img: '' },
-            { id: 384, name: 'Rayquaza', type: 'Dragon', gen: 3, img: '' },
             { id: 906, name: 'Sprigatito', type: 'Grass', gen: 9, img: '' }
         ];
 
@@ -584,6 +622,21 @@
             genFilter.value = currentGenValue;
         }
 
+        // === TÍNH NĂNG XEM TRƯỚC ẢNH ===
+        window.openPreview = function(imgSrc) {
+            if(!imgSrc || imgSrc === 'none' || imgSrc === '') return;
+            const modal = document.getElementById('previewModal');
+            const previewImg = document.getElementById('previewImage');
+            previewImg.src = imgSrc;
+            modal.classList.add('active');
+        }
+
+        window.closePreview = function() {
+            const modal = document.getElementById('previewModal');
+            modal.classList.remove('active');
+            setTimeout(() => { document.getElementById('previewImage').src = ''; }, 300);
+        }
+
         // === RENDER GALLERY BIẾN ĐỔI THEO NGÔN NGỮ ===
         function renderGallery(data) {
             gallery.innerHTML = '';
@@ -599,7 +652,8 @@
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.innerHTML = `
-                    <div class="card-img-wrapper">
+                    <div class="card-img-wrapper" onclick="openPreview('${poke.img}')" title="Nhấn để xem đầy đủ">
+                        <!-- Tích hợp onclick để gọi popup -->
                         <img src="${poke.img || 'none'}" alt="${poke.name}" loading="lazy" 
                              onerror="this.onerror=null; this.src='https://placehold.co/600x600/1e1b4b/60a5fa?text=${encodeURIComponent(langData.placeholderText)}'">
                     </div>
@@ -613,7 +667,7 @@
                 `;
                 gallery.appendChild(card);
 
-                // Thẻ giả lập Banner Native xen kẽ (Do mạng quảng cáo yêu cầu ID mã duy nhất mỗi trang)
+                // Thẻ giả lập Banner Native xen kẽ
                 if ((index + 1) % 3 === 0) {
                     const adCard = document.createElement('div');
                     adCard.className = 'ad-card';
