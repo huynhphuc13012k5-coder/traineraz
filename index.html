@@ -145,13 +145,13 @@
             width: 100%;
             display: flex;
             gap: 20px;
-            flex-wrap: wrap; /* Cho phép xếp chồng trên điện thoại */
+            flex-wrap: wrap; 
             justify-content: center;
         }
 
         .ad-box {
-            flex: 1 1 45%; /* Chiếm ~50% chiều ngang trên Desktop */
-            min-width: 300px; /* Ép xếp chồng xuống dưới khi ở Mobile */
+            flex: 1 1 45%; 
+            min-width: 300px; 
             background: var(--ad-bg);
             border: 1px dashed var(--ad-border);
             backdrop-filter: var(--glass-blur);
@@ -185,7 +185,6 @@
             width: 100%;
         }
 
-        /* Quảng cáo dính đáy */
         .ad-bottom-sticky {
             position: fixed;
             bottom: 15px;
@@ -200,7 +199,7 @@
             border: 1px solid rgba(99, 102, 241, 0.3);
             border-radius: 18px;
             z-index: 999;
-            display: none; /* Hiển thị sau 2 phút */
+            display: none; 
             align-items: center;
             justify-content: center;
             color: #e2e8f0;
@@ -386,7 +385,6 @@
             box-shadow: 0 12px 30px rgba(16, 185, 129, 0.6);
         }
 
-        /* Nút X ở màn hình chờ */
         .close-ad-modal {
             position: absolute;
             top: 25px;
@@ -475,13 +473,11 @@
         </div>
     </header>
 
-    <!-- 2 QUẢNG CÁO ĐẦU TRANG ĐÃ ĐƯỢC TỐI ƯU HÓA ĐỂ CHẠY SONG SONG MÀ KHÔNG LỖI -->
+    <!-- 2 QUẢNG CÁO ĐẦU TRANG -->
     <div class="ad-container">
-        <!-- Khung quảng cáo 1 -->
         <div class="ad-box ad-top">
             <iframe srcdoc="<style>body{margin:0;display:flex;justify-content:center;align-items:center;height:100%;background:transparent;overflow:hidden;}</style><script async='async' data-cfasync='false' src='https://pl28380548.effectivecpmnetwork.com/7e2d82f6a06f1d1af35df8cc14d6a654/invoke.js'></script><div id='container-7e2d82f6a06f1d1af35df8cc14d6a654'></div>" style="width:100%; height:100%; min-height:90px; border:none;" scrolling="no"></iframe>
         </div>
-        <!-- Khung quảng cáo 2 -->
         <div class="ad-box ad-top">
             <iframe srcdoc="<style>body{margin:0;display:flex;justify-content:center;align-items:center;height:100%;background:transparent;overflow:hidden;}</style><script async='async' data-cfasync='false' src='https://pl28380548.effectivecpmnetwork.com/7e2d82f6a06f1d1af35df8cc14d6a654/invoke.js'></script><div id='container-7e2d82f6a06f1d1af35df8cc14d6a654'></div>" style="width:100%; height:100%; min-height:90px; border:none;" scrolling="no"></iframe>
         </div>
@@ -490,7 +486,7 @@
     <!-- Gallery Chứa Hình Nền -->
     <div class="gallery" id="gallery"></div>
 
-    <!-- Banner Dính Chân Trang Mobile (Tự hiện sau 2 phút = 120,000ms) -->
+    <!-- Banner Dính Chân Trang Mobile (Tự hiện sau 2 phút) -->
     <div class="ad-bottom-sticky" id="stickyAd">
         <a href="#" class="ad-link" style="flex-direction: row; pointer-events: none;">
             <span id="ad-sticky-text">Quảng cáo tài trợ hiển thị tại đây thiết kế tối ưu trên Mobile</span>
@@ -530,7 +526,7 @@
                 adModalCountdown: "Hệ thống đang chuẩn bị tệp hình ảnh 4K... ({time}s)",
                 adModalBtn: "⚡ Tải Wallpaper Ngay",
                 adText: "Tài trợ",
-                alertEmpty: "Khung này chưa được thiết lập link ảnh thật trong code script!",
+                alertEmpty: "Khung này chưa được thiết lập link ảnh thật trong file JSON!",
                 allTypes: "Tất cả Hệ",
                 allGens: "Tất cả Thế hệ",
                 allCategories: "Tất cả Thể loại",
@@ -555,7 +551,7 @@
                 adModalCountdown: "System is preparing the 4K image file... ({time}s)",
                 adModalBtn: "⚡ Download Now",
                 adText: "Sponsored",
-                alertEmpty: "This template slot does not have an image URL configured yet!",
+                alertEmpty: "This template slot does not have an image URL configured in JSON!",
                 allTypes: "All Types",
                 allGens: "All Generations",
                 allCategories: "All Categories",
@@ -572,33 +568,10 @@
         };
 
         let currentLang = 'vi';
-
-        // =========================================================================
-        // DATA ẢNH MỞ RỘNG (14 ẢNH) ĐỂ TEST TÍNH NĂNG "10 ẢNH NGẪU NHIÊN"
-        // =========================================================================
-        const wallpapers = [
-            { id: 1, name: 'Bulbasaur', category: 'default', type: 'Grass', gen: 1, img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png' },
-            { id: 2, name: 'Ivysaur', category: 'landscape', type: 'Grass', gen: 1, img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/2.png' },
-            { id: 3, name: 'Venusaur', category: 'fanart', type: 'Grass', gen: 1, img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png' },
-            { id: 4, name: 'Charmander', category: 'default', type: 'Fire', gen: 1, img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png' },
-            { id: 5, name: 'Charmeleon', category: 'landscape', type: 'Fire', gen: 1, img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/5.png' },
-            { id: 6, name: 'Charizard', category: 'fanart', type: 'Fire', gen: 1, img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png' },
-            { id: 7, name: 'Squirtle', category: 'family', type: 'Water', gen: 1, img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/7.png' },
-            { id: 8, name: 'Wartortle', category: 'default', type: 'Water', gen: 1, img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/8.png' },
-            { id: 9, name: 'Blastoise', category: 'landscape', type: 'Water', gen: 1, img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/9.png' },
-            { id: 25, name: 'Pikachu', category: 'family', type: 'Electric', gen: 1, img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png' },
-            { id: 150, name: 'Mewtwo', category: 'fanart', type: 'Psychic', gen: 1, img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/150.png' },
-            { id: 384, name: 'Rayquaza', category: 'landscape', type: 'Dragon', gen: 3, img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/384.png' },
-            { id: 658, name: 'Greninja', category: 'family', type: 'Water', gen: 6, img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/658.png' },
-            { id: 906, name: 'Sprigatito', category: 'default', type: 'Grass', gen: 9, img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/906.png' }
-        ];
-
-        // Lấy 10 ảnh ngẫu nhiên để lưu lại hiển thị lúc mới vào web
-        function getRandomWallpapers(arr, num) {
-            const shuffled = [...arr].sort(() => 0.5 - Math.random());
-            return shuffled.slice(0, num);
-        }
-        let initialRandom10 = getRandomWallpapers(wallpapers, 10);
+        
+        // CÁC BIẾN QUẢN LÝ DỮ LIỆU JSON
+        let wallpapers = [];
+        let initialRandom10 = [];
 
         // === DOM ELEMENTS ===
         const gallery = document.getElementById('gallery');
@@ -708,7 +681,7 @@
                 `;
                 gallery.appendChild(card);
 
-                // CHÈN QUẢNG CÁO MỖI 3 ẢNH BẰNG IFRAME
+                // CHÈN QUẢNG CÁO MỖI 3 ẢNH
                 if ((index + 1) % 3 === 0) {
                     const adCard = document.createElement('div');
                     adCard.className = 'ad-card';
@@ -719,20 +692,20 @@
             });
         }
 
-        // === THUẬT TOÁN TÌM KIẾM (HIỂN THỊ TỪ DATA TỔNG NẾU CÓ TƯƠNG TÁC) ===
+        // === THUẬT TOÁN TÌM KIẾM ===
         function filterWallpapers() {
             const searchTerm = searchInput.value.toLowerCase().trim();
             const selectedType = typeFilter.value;
             const selectedGen = genFilter.value;
             const selectedCat = categoryFilter.value;
 
-            // Nếu người dùng không chọn bộ lọc nào và không tìm gì cả, thì trở về 10 ảnh ngẫu nhiên ban đầu
+            // Về trạng thái ban đầu nếu không có bộ lọc nào được chọn
             if (searchTerm === '' && selectedType === 'all' && selectedGen === 'all' && selectedCat === 'all') {
                 renderGallery(initialRandom10);
                 return;
             }
 
-            // Nếu người dùng bắt đầu tìm kiếm / lọc, sẽ quét 100% kho dữ liệu ảnh
+            // Quét toàn bộ kho dữ liệu ảnh
             const filteredData = wallpapers.filter(poke => {
                 const matchSearch = poke.name.toLowerCase().includes(searchTerm) || poke.id.toString() === searchTerm;
                 const matchType = selectedType === 'all' || poke.type === selectedType;
@@ -814,6 +787,39 @@
         });
 
         // ==========================================================
+        // FETCH DATA TỪ FILE JSON VÀ KHỞI TẠO WEB
+        // ==========================================================
+        
+        function getRandomWallpapers(arr, num) {
+            const shuffled = [...arr].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, num);
+        }
+
+        async function initApp() {
+            try {
+                // Đọc file JSON (Lưu ý: Phải chạy trên môi trường Server/Live Server mới fetch được local json)
+                const response = await fetch('wallpapers.json');
+                wallpapers = await response.json();
+                
+                // Trích xuất 10 ảnh ngẫu nhiên đầu tiên
+                initialRandom10 = getRandomWallpapers(wallpapers, 10);
+                
+                // Nạp tính năng
+                populateSearchSuggestions();
+                updateLanguageUI();
+                renderGallery(initialRandom10);
+
+            } catch (error) {
+                console.error("Lỗi khi tải dữ liệu ảnh:", error);
+                gallery.innerHTML = '<p style="text-align:center; grid-column: 1/-1; color: white;">Lỗi kết nối dữ liệu máy chủ. Hãy đảm bảo bạn đang chạy qua Local Server (Live Server).</p>';
+            }
+        }
+
+        // Chạy hàm khởi tạo khi load trang
+        initApp();
+
+
+        // ==========================================================
         // HỆ THỐNG KIỂM SOÁT ĐỘ TRỄ QUẢNG CÁO (POPUNDER & STICKY AD)
         // ==========================================================
         
@@ -827,11 +833,9 @@
 
         // 2. POPUNDER AD (Quảng cáo nhảy ẩn) - Bật sau 1 phút, làm mới liên tục mỗi 1 phút
         function injectPopunder() {
-            // Xóa mã cũ nếu có để tránh lỗi DOM quá tải
             const oldScript = document.getElementById('popunder-script');
             if (oldScript) oldScript.remove();
             
-            // Chèn mã mới để sẵn sàng kích hoạt khi người dùng click
             const script = document.createElement('script');
             script.id = 'popunder-script';
             script.src = "https://pl28367045.effectivecpmnetwork.com/21/a5/29/21a529b83c341a83dbcc4496740c1279.js";
@@ -839,15 +843,10 @@
         }
 
         setTimeout(() => {
-            injectPopunder(); // Nạp lần đầu sau 60s
-            setInterval(injectPopunder, 60000); // Lặp lại việc reset bộ đếm Popunder sau mỗi 60s
+            injectPopunder(); 
+            setInterval(injectPopunder, 60000); 
         }, 60000);
 
-
-        // Khởi động trang web ban đầu
-        populateSearchSuggestions();
-        updateLanguageUI();
-        renderGallery(initialRandom10); // Chỉ hiện 10 ảnh ngẫu nhiên lúc vừa vào
     </script>
 </body>
 </html>
