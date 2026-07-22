@@ -1,18 +1,18 @@
 [
     { 
-        "id": 1, 
-        "name": "Bulbasaur", 
+        "id": 376, 
+        "name": "Metagross", 
         "category": "default", 
         "type": "Grass", 
         "gen": 1, 
-        "img": "image/1.png" 
+        "img": "image/3.png" 
     },
     { 
-        "id": 2, 
-        "name": "Ivysaur", 
+        "id": 260, 
+        "name": "Swampert", 
         "category": "landscape", 
-        "type": "Grass", 
-        "gen": 1, 
+        "type": "Water", 
+        "gen": 3, 
         "img": "image/2.png" 
     },
     { 
@@ -21,7 +21,7 @@
         "category": "fanart", 
         "type": "Grass", 
         "gen": 1, 
-        "img": "image/3.png" 
+        "img": "image/1.png" 
     },
     { 
         "id": 4, 
@@ -33,67 +33,19 @@
     },
     { 
         "id": 5, 
-        "name": "Charmeleon", 
+        "name": "GenGar", 
         "category": "landscape", 
-        "type": "Fire", 
+        "type": "Ghost", 
         "gen": 1, 
         "img": "image/5.png" 
     },
     { 
-        "id": 6, 
-        "name": "Charizard", 
+        "id": 0, 
+        "name": "", 
         "category": "fanart", 
         "type": "Fire", 
         "gen": 1, 
         "img": "image/6.png" 
-    },
-    { 
-        "id": 7, 
-        "name": "Squirtle", 
-        "category": "family", 
-        "type": "Water", 
-        "gen": 1, 
-        "img": "image/7.png" 
-    },
-    { 
-        "id": 8, 
-        "name": "Wartortle", 
-        "category": "default", 
-        "type": "Water", 
-        "gen": 1, 
-        "img": "image/8.png" 
-    },
-    { 
-        "id": 9, 
-        "name": "Blastoise", 
-        "category": "landscape", 
-        "type": "Water", 
-        "gen": 1, 
-        "img": "image/9.png" 
-    },
-    { 
-        "id": 25, 
-        "name": "Pikachu", 
-        "category": "family", 
-        "type": "Electric", 
-        "gen": 1, 
-        "img": "image/6.png" 
-    },
-    { 
-        "id": 150, 
-        "name": "Mewtwo", 
-        "category": "fanart", 
-        "type": "Psychic", 
-        "gen": 1, 
-        "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/150.png" 
-    },
-    { 
-        "id": 384, 
-        "name": "Rayquaza", 
-        "category": "landscape", 
-        "type": "Dragon", 
-        "gen": 3, 
-        "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/384.png" 
     },
     { 
         "id": 658, 
@@ -101,14 +53,30 @@
         "category": "family", 
         "type": "Water", 
         "gen": 6, 
-        "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/658.png" 
+        "img": "image/7.png" 
     },
     { 
-        "id": 906, 
-        "name": "Sprigatito", 
+        "id": 257, 
+        "name": "Blaziken", 
         "category": "default", 
+        "type": "Fire", 
+        "gen": 3, 
+        "img": "image/8.png" 
+    },
+    { 
+        "id": 655, 
+        "name": "Delphox", 
+        "category": "default", 
+        "type": "Fire", 
+        "gen": 1, 
+        "img": "image/9.png" 
+    },
+    { 
+        "id": 389, 
+        "name": "Torterra", 
+        "category": "family", 
         "type": "Grass", 
-        "gen": 9, 
-        "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/906.png" 
-    }
+        "gen": 4, 
+        "img": "image/10.png" 
+    },
 ]
