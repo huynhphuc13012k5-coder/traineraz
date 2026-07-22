@@ -1,0 +1,114 @@
+[
+    { 
+        "id": 1, 
+        "name": "Bulbasaur", 
+        "category": "default", 
+        "type": "Grass", 
+        "gen": 1, 
+        "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png" 
+    },
+    { 
+        "id": 2, 
+        "name": "Ivysaur", 
+        "category": "landscape", 
+        "type": "Grass", 
+        "gen": 1, 
+        "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/2.png" 
+    },
+    { 
+        "id": 3, 
+        "name": "Venusaur", 
+        "category": "fanart", 
+        "type": "Grass", 
+        "gen": 1, 
+        "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png" 
+    },
+    { 
+        "id": 4, 
+        "name": "Charmander", 
+        "category": "default", 
+        "type": "Fire", 
+        "gen": 1, 
+        "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png" 
+    },
+    { 
+        "id": 5, 
+        "name": "Charmeleon", 
+        "category": "landscape", 
+        "type": "Fire", 
+        "gen": 1, 
+        "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/5.png" 
+    },
+    { 
+        "id": 6, 
+        "name": "Charizard", 
+        "category": "fanart", 
+        "type": "Fire", 
+        "gen": 1, 
+        "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png" 
+    },
+    { 
+        "id": 7, 
+        "name": "Squirtle", 
+        "category": "family", 
+        "type": "Water", 
+        "gen": 1, 
+        "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/7.png" 
+    },
+    { 
+        "id": 8, 
+        "name": "Wartortle", 
+        "category": "default", 
+        "type": "Water", 
+        "gen": 1, 
+        "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/8.png" 
+    },
+    { 
+        "id": 9, 
+        "name": "Blastoise", 
+        "category": "landscape", 
+        "type": "Water", 
+        "gen": 1, 
+        "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/9.png" 
+    },
+    { 
+        "id": 25, 
+        "name": "Pikachu", 
+        "category": "family", 
+        "type": "Electric", 
+        "gen": 1, 
+        "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png" 
+    },
+    { 
+        "id": 150, 
+        "name": "Mewtwo", 
+        "category": "fanart", 
+        "type": "Psychic", 
+        "gen": 1, 
+        "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/150.png" 
+    },
+    { 
+        "id": 384, 
+        "name": "Rayquaza", 
+        "category": "landscape", 
+        "type": "Dragon", 
+        "gen": 3, 
+        "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/384.png" 
+    },
+    { 
+        "id": 658, 
+        "name": "Greninja", 
+        "category": "family", 
+        "type": "Water", 
+        "gen": 6, 
+        "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/658.png" 
+    },
+    { 
+        "id": 906, 
+        "name": "Sprigatito", 
+        "category": "default", 
+        "type": "Grass", 
+        "gen": 9, 
+        "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/906.png" 
+    }
+]
